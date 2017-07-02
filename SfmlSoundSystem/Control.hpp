@@ -49,7 +49,7 @@
 namespace sfmlSoundSystem
 {
 
-// SSS (SFML Sound System) v1.0 - Control
+// SSS (SFML Sound System) v1.1 - Control
 class Control
 {
 public:
@@ -66,6 +66,7 @@ public:
 	void stopFx();
 	void stopMusic();
 	void stopAll();
+	sf::SoundBuffer& getBuffer(const std::string& soundId);
 	std::string getCurrentMusic() const;
 	sf::SoundSource::Status getCurrentMusicStatus() const;
 	unsigned int getNumberOfSoundsPlaying() const;
@@ -95,6 +96,11 @@ private:
 	bool priv_triggerSound(const sf::SoundBuffer& buffer, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volume = 1.f);
 	void priv_startSound(sf::Sound& voice, const sf::SoundBuffer& buffer, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volume = 1.f);
 };
+
+inline sf::SoundBuffer& Control::getBuffer(const std::string& soundId)
+{
+	return m_buffers[soundId];
+}
 
 inline std::string Control::getCurrentMusic() const
 {
