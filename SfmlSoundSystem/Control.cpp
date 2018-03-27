@@ -83,6 +83,14 @@ bool Control::loadBuffer(const std::string& soundId, const std::vector<char>& me
 		m_buffers.emplace(soundId, soundBuffer).second;
 }
 
+bool Control::loadBuffer(const std::string& soundId, const char* memoryBlock, const std::size_t memorySize)
+{
+	sf::SoundBuffer soundBuffer;
+	return soundBuffer.loadFromMemory(memoryBlock, memorySize) &&
+		m_bufferVolumes.emplace(soundId, 1.f).second &&
+		m_buffers.emplace(soundId, soundBuffer).second;
+}
+
 bool Control::linkMusic(const std::string& musicId, std::vector<char>& memoryBlock)
 {
 	return m_musicVolumes.emplace(musicId, 1.f).second &&
@@ -109,6 +117,11 @@ bool Control::playSound(const std::string& soundId, const sf::Vector3f& position
 		return false;
 	priv_triggerSound(m_buffers[soundId], positionOffset, m_bufferVolumes[soundId] * volumeMultiplier);
 	return true;
+}
+
+bool Control::playSound(const std::string& soundId, const sf::Vector2f& positionOffset, const float volumeMultiplier)
+{
+	return playSound(soundId, { positionOffset.x, positionOffset.y, 0.000001f }, volumeMultiplier); // apply 2D position to the XY plane immediately in front (+z)
 }
 
 bool Control::playMusic(const std::string& musicId, const sf::Time transitionDuration, const float volumeMultiplier)
@@ -172,6 +185,11 @@ void Control::stopAll()
 {
 	stopFx();
 	stopMusic();
+}
+
+void Control::setMaximumNumberOfVoices(const unsigned int maximumNumberOfVoices)
+{
+	m_voices.resize(maximumNumberOfVoices);
 }
 
 

@@ -36,10 +36,10 @@
 #include <exception>
 #include <string>
 
-#ifdef _MSC_VER
-#define NOEXCEPT
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#define SFMLSOUNDSYSTEM_NOEXCEPT
 #else
-#define NOEXCEPT noexcept
+#define SFMLSOUNDSYSTEM_NOEXCEPT noexcept
 #endif
 
 namespace sfmlSoundSystem
@@ -52,7 +52,7 @@ public:
 		m_errorMessage("[SFML Sound System] " + errorMessage)
 	{
 	}
-	virtual const char* what() const NOEXCEPT override
+	virtual const char* what() const SFMLSOUNDSYSTEM_NOEXCEPT override
 	{
 		return m_errorMessage.c_str();
 	}

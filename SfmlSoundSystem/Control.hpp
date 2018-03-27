@@ -38,6 +38,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <SFML/System/Vector2.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
@@ -49,7 +50,7 @@
 namespace sfmlSoundSystem
 {
 
-// SSS (SFML Sound System) v1.1 - Control
+// SSS (SFML Sound System) v1.2 - Control
 class Control
 {
 public:
@@ -57,15 +58,19 @@ public:
 	void update();
 	bool loadBuffer(const std::string& soundId, const std::vector<char>& memoryBlock);
 	bool linkMusic(const std::string& musicId, std::vector<char>& memoryBlock);
+	bool loadBuffer(const std::string& soundId, const char* memoryBlock, std::size_t memorySize);
 	bool loadBuffer(const std::string& soundId, const std::string& filename);
 	bool linkMusic(const std::string& musicId, const std::string& filename);
 	bool playSound(const std::string& soundId, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volumeMultiplier = 1.f);
+	bool playSound(const std::string& soundId, const sf::Vector2f& positionOffset, float volumeMultiplier = 1.f);
 	bool playMusic(const std::string& musicId, sf::Time transitionDuration = sf::Time::Zero, float volumeMultiplier = 1.f);
 	bool assignVolumeSound(const std::string& soundId, float volume = 1.f);
 	bool assignVolumeMusic(const std::string& musicId, float volume = 1.f);
 	void stopFx();
 	void stopMusic();
 	void stopAll();
+	void setMaximumNumberOfVoices(unsigned int maximumNumberOfVoices);
+	unsigned int getMaximumNumberOfVoices() const;
 	sf::SoundBuffer& getBuffer(const std::string& soundId);
 	std::string getCurrentMusic() const;
 	sf::SoundSource::Status getCurrentMusicStatus() const;
@@ -96,6 +101,11 @@ private:
 	bool priv_triggerSound(const sf::SoundBuffer& buffer, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volume = 1.f);
 	void priv_startSound(sf::Sound& voice, const sf::SoundBuffer& buffer, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volume = 1.f);
 };
+
+inline unsigned int Control::getMaximumNumberOfVoices() const
+{
+	return m_voices.size();
+}
 
 inline sf::SoundBuffer& Control::getBuffer(const std::string& soundId)
 {
