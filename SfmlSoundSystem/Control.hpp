@@ -50,7 +50,7 @@
 namespace sfmlSoundSystem
 {
 
-// SSS (SFML Sound System) v1.2 - Control
+// SSS (SFML Sound System) v1.3 - Control
 class Control
 {
 public:
@@ -66,6 +66,9 @@ public:
 	bool playMusic(const std::string& musicId, sf::Time transitionDuration = sf::Time::Zero, float volumeMultiplier = 1.f);
 	bool assignVolumeSound(const std::string& soundId, float volume = 1.f);
 	bool assignVolumeMusic(const std::string& musicId, float volume = 1.f);
+	sf::Time getCurrentMusicPosition() const;
+	void pauseMusic();
+	void resumeMusic();
 	void stopFx();
 	void stopMusic();
 	void stopAll();

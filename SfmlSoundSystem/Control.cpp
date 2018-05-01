@@ -169,6 +169,26 @@ bool Control::assignVolumeMusic(const std::string& musicId, const float volume)
 	return true;
 }
 
+sf::Time Control::getCurrentMusicPosition() const
+{
+	if (getCurrentMusicStatus() != sf::SoundSource::Status::Stopped)
+		return m_musics[m_currentMusicVoice].getPlayingOffset();
+
+	return sf::Time::Zero;
+}
+
+void Control::pauseMusic()
+{
+	if (getCurrentMusicStatus() == sf::SoundSource::Status::Playing)
+		m_musics[m_currentMusicVoice].pause();
+}
+
+void Control::resumeMusic()
+{
+	if (getCurrentMusicStatus() == sf::SoundSource::Status::Paused)
+		m_musics[m_currentMusicVoice].play();
+}
+
 void Control::stopFx()
 {
 	for (auto& voice : m_voices)
