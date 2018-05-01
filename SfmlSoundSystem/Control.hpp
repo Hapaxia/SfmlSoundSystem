@@ -104,7 +104,7 @@ private:
 
 inline unsigned int Control::getMaximumNumberOfVoices() const
 {
-	return m_voices.size();
+	return static_cast<unsigned int>(m_voices.size());
 }
 
 inline sf::SoundBuffer& Control::getBuffer(const std::string& soundId)
