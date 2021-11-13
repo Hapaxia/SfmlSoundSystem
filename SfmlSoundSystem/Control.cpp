@@ -5,7 +5,7 @@
 //
 // Control
 //
-// Copyright(c) 2016-2018 M.J.Silk
+// Copyright(c) 2016-2021 M.J.Silk
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -73,6 +73,12 @@ void Control::update()
 		previous.setVolume(m_previousVolume * (1.f - fadeRatio));
 	else if (previous.getStatus() == sf::Music::Status::Playing)
 		previous.stop();
+}
+
+bool Control::copyBuffer(const std::string& soundId, const sf::SoundBuffer& soundBuffer)
+{
+	return m_bufferVolumes.emplace(soundId, 1.f).second &&
+		m_buffers.emplace(soundId, soundBuffer).second;
 }
 
 bool Control::loadBuffer(const std::string& soundId, const std::vector<char>& memoryBlock)
@@ -175,6 +181,11 @@ sf::Time Control::getCurrentMusicPosition() const
 		return m_musics[m_currentMusicVoice].getPlayingOffset();
 
 	return sf::Time::Zero;
+}
+
+bool Control::restartMusic()
+{
+	return playMusic(m_currentMusic);
 }
 
 void Control::pauseMusic()

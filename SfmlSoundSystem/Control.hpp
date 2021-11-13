@@ -5,7 +5,7 @@
 //
 // Control
 //
-// Copyright(c) 2016-2018 M.J.Silk
+// Copyright(c) 2016-2021 M.J.Silk
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -50,12 +50,13 @@
 namespace sfmlSoundSystem
 {
 
-// SSS (SFML Sound System) v1.3 - Control
+// SSS (SFML Sound System) v1.4 - Control
 class Control
 {
 public:
 	Control();
 	void update();
+	bool copyBuffer(const std::string& soundId, const sf::SoundBuffer& soundBuffer);
 	bool loadBuffer(const std::string& soundId, const std::vector<char>& memoryBlock);
 	bool linkMusic(const std::string& musicId, std::vector<char>& memoryBlock);
 	bool loadBuffer(const std::string& soundId, const char* memoryBlock, std::size_t memorySize);
@@ -67,6 +68,7 @@ public:
 	bool assignVolumeSound(const std::string& soundId, float volume = 1.f);
 	bool assignVolumeMusic(const std::string& musicId, float volume = 1.f);
 	sf::Time getCurrentMusicPosition() const;
+	bool restartMusic();
 	void pauseMusic();
 	void resumeMusic();
 	void stopFx();
@@ -78,6 +80,7 @@ public:
 	std::string getCurrentMusic() const;
 	sf::SoundSource::Status getCurrentMusicStatus() const;
 	unsigned int getNumberOfSoundsPlaying() const;
+	bool getIsCurrentlyPaused() const;
 
 
 
@@ -134,6 +137,11 @@ inline unsigned int Control::getNumberOfSoundsPlaying() const
 			++total;
 	}
 	return total;
+}
+
+inline bool Control::getIsCurrentlyPaused() const
+{
+	return getCurrentMusicStatus() == sf::SoundSource::Status::Paused;
 }
 
 } // namespace sfmlSoundSystem
