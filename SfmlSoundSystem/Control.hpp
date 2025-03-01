@@ -50,7 +50,7 @@
 namespace sfmlSoundSystem
 {
 
-// SSS (SFML Sound System) v1.4 - Control
+// SSS (SFML Sound System) v1.5 - Control
 class Control
 {
 public:
@@ -58,10 +58,10 @@ public:
 	void update();
 	bool copyBuffer(const std::string& soundId, const sf::SoundBuffer& soundBuffer);
 	bool loadBuffer(const std::string& soundId, const std::vector<char>& memoryBlock);
-	bool linkMusic(const std::string& musicId, std::vector<char>& memoryBlock);
+	bool openMusic(const std::string& musicId, std::vector<char>& memoryBlock);
 	bool loadBuffer(const std::string& soundId, const char* memoryBlock, std::size_t memorySize);
 	bool loadBuffer(const std::string& soundId, const std::string& filename);
-	bool linkMusic(const std::string& musicId, const std::string& filename);
+	bool openMusic(const std::string& musicId, const std::string& filename);
 	bool playSound(const std::string& soundId, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volumeMultiplier = 1.f);
 	bool playSound(const std::string& soundId, const sf::Vector2f& positionOffset, float volumeMultiplier = 1.f);
 	bool playMusic(const std::string& musicId, sf::Time transitionDuration = sf::Time::Zero, float volumeMultiplier = 1.f);
@@ -74,12 +74,12 @@ public:
 	void stopFx();
 	void stopMusic();
 	void stopAll();
-	void setMaximumNumberOfVoices(unsigned int maximumNumberOfVoices);
-	unsigned int getMaximumNumberOfVoices() const;
+	void setMaximumNumberOfVoices(std::size_t maximumNumberOfVoices);
+	std::size_t getMaximumNumberOfVoices() const;
 	sf::SoundBuffer& getBuffer(const std::string& soundId);
 	std::string getCurrentMusic() const;
 	sf::SoundSource::Status getCurrentMusicStatus() const;
-	unsigned int getNumberOfSoundsPlaying() const;
+	std::size_t getNumberOfSoundsPlaying() const;
 	bool getIsCurrentlyPaused() const;
 
 
@@ -97,7 +97,7 @@ private:
 	std::unordered_map<std::string, std::string> m_musicFilenames;
 	std::unordered_map<std::string, float> m_musicVolumes;
 	std::vector<sf::Music> m_musics;
-	unsigned int m_currentMusicVoice;
+	std::size_t m_currentMusicVoice;
 	std::string m_currentMusic;
 
 	sf::Clock m_fadeTimer;
@@ -108,9 +108,9 @@ private:
 	void priv_startSound(sf::Sound& voice, const sf::SoundBuffer& buffer, const sf::Vector3f& positionOffset = { 0.f, 0.f, 0.f }, float volume = 1.f);
 };
 
-inline unsigned int Control::getMaximumNumberOfVoices() const
+inline std::size_t Control::getMaximumNumberOfVoices() const
 {
-	return static_cast<unsigned int>(m_voices.size());
+	return m_voices.size();
 }
 
 inline sf::SoundBuffer& Control::getBuffer(const std::string& soundId)
@@ -128,9 +128,9 @@ inline sf::SoundSource::Status Control::getCurrentMusicStatus() const
 	return m_musics[m_currentMusicVoice].getStatus();
 }
 
-inline unsigned int Control::getNumberOfSoundsPlaying() const
+inline std::size_t Control::getNumberOfSoundsPlaying() const
 {
-	unsigned int total{ 0u };
+	std::size_t total{ 0u };
 	for (auto& voice : m_voices)
 	{
 		if (voice.getStatus() == sf::SoundSource::Status::Playing)
@@ -141,7 +141,7 @@ inline unsigned int Control::getNumberOfSoundsPlaying() const
 
 inline bool Control::getIsCurrentlyPaused() const
 {
-	return getCurrentMusicStatus() == sf::SoundSource::Status::Paused;
+	return (getCurrentMusicStatus() == sf::SoundSource::Status::Paused);
 }
 
 } // namespace sfmlSoundSystem

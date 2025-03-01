@@ -66,11 +66,11 @@ void Control::update()
 {
 	const sf::Time fadeInLength{ m_transitionDuration };
 	const sf::Time fadeCurrentTime{ m_fadeTimer.getElapsedTime() };
-	const float fadeRatio{ (fadeInLength == sf::Time::Zero) ? 0.f : (fadeCurrentTime / fadeInLength) };
+	const float fadeRatio{ (fadeInLength == sf::Time::Zero) ? 1.f : (fadeCurrentTime / fadeInLength) };
 	const float volumeMultiplier{ (fadeRatio < 1.f) ? fadeRatio : 1.f };
 	m_musics[m_currentMusicVoice].setVolume(m_musicVolumes[m_currentMusic] * volumeMultiplier * 100.f);
 
-	sf::Music& previous{ m_musics[1 - m_currentMusicVoice] };
+	sf::Music& previous{ m_musics[1u - m_currentMusicVoice] };
 	if (fadeRatio <= 1.f)
 		previous.setVolume(m_previousVolume * (1.f - fadeRatio));
 	else if (previous.getStatus() == sf::Music::Status::Playing)
@@ -99,7 +99,7 @@ bool Control::loadBuffer(const std::string& soundId, const char* memoryBlock, co
 		m_buffers.emplace(soundId, soundBuffer).second;
 }
 
-bool Control::linkMusic(const std::string& musicId, std::vector<char>& memoryBlock)
+bool Control::openMusic(const std::string& musicId, std::vector<char>& memoryBlock)
 {
 	return m_musicVolumes.emplace(musicId, 1.f).second &&
 		m_pMusicMemories.emplace(musicId, &memoryBlock).second;
@@ -113,7 +113,7 @@ bool Control::loadBuffer(const std::string& soundId, const std::string& filename
 		m_buffers.emplace(soundId, soundBuffer).second;
 }
 
-bool Control::linkMusic(const std::string& musicId, const std::string& filename)
+bool Control::openMusic(const std::string& musicId, const std::string& filename)
 {
 	return m_musicVolumes.emplace(musicId, 1.f).second &&
 		m_musicFilenames.emplace(musicId, filename).second;
@@ -220,7 +220,7 @@ void Control::stopAll()
 	stopMusic();
 }
 
-void Control::setMaximumNumberOfVoices(const unsigned int maximumNumberOfVoices)
+void Control::setMaximumNumberOfVoices(const std::size_t maximumNumberOfVoices)
 {
 	m_voices.resize(maximumNumberOfVoices, sf::Sound(emptySoundBuffer));
 }
