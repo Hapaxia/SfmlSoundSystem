@@ -5,7 +5,7 @@
 //
 // Common
 //
-// Copyright(c) 2016-2022 M.J.Silk
+// Copyright(c) 2016-2025 M.J.Silk
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -36,12 +36,6 @@
 #include <exception>
 #include <string>
 
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
-#define SFMLSOUNDSYSTEM_NOEXCEPT
-#else
-#define SFMLSOUNDSYSTEM_NOEXCEPT noexcept
-#endif
-
 namespace sfmlSoundSystem
 {
 
@@ -52,7 +46,7 @@ public:
 		m_errorMessage("[SFML Sound System] " + errorMessage)
 	{
 	}
-	virtual const char* what() const SFMLSOUNDSYSTEM_NOEXCEPT override
+	virtual const char* what() const noexcept override
 	{
 		return m_errorMessage.c_str();
 	}

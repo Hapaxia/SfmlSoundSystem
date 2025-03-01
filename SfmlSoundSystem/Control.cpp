@@ -5,7 +5,7 @@
 //
 // Control
 //
-// Copyright(c) 2016-2022 M.J.Silk
+// Copyright(c) 2016-2025 M.J.Silk
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -43,28 +43,30 @@ namespace
 
 constexpr unsigned int defaultNumberOfVoices{ 64u };
 
+sf::SoundBuffer emptySoundBuffer{};
+
 } // namespace
 
 namespace sfmlSoundSystem
 {
 
 Control::Control()
-	: m_musics(2)
-	, m_voices(defaultNumberOfVoices)
-	, m_currentMusic("")
-	, m_currentMusicVoice(0u)
-	, m_previousVolume(0.f)
-	, m_transitionDuration(sf::Time::Zero)
+	: m_musics(2u)
+	, m_voices(defaultNumberOfVoices, sf::Sound(emptySoundBuffer))
+	, m_currentMusic{ "" }
+	, m_currentMusicVoice{ 0u }
+	, m_previousVolume{ 0.f }
+	, m_transitionDuration{ sf::Time::Zero }
 {
 	for (auto& music : m_musics)
-		music.setLoop(true);
+		music.setLooping(true);
 }
 
 void Control::update()
 {
 	const sf::Time fadeInLength{ m_transitionDuration };
 	const sf::Time fadeCurrentTime{ m_fadeTimer.getElapsedTime() };
-	const float fadeRatio{ fadeCurrentTime / fadeInLength };
+	const float fadeRatio{ (fadeInLength == sf::Time::Zero) ? 0.f : (fadeCurrentTime / fadeInLength) };
 	const float volumeMultiplier{ (fadeRatio < 1.f) ? fadeRatio : 1.f };
 	m_musics[m_currentMusicVoice].setVolume(m_musicVolumes[m_currentMusic] * volumeMultiplier * 100.f);
 
@@ -138,7 +140,7 @@ bool Control::playMusic(const std::string& musicId, const sf::Time transitionDur
 
 	m_currentMusic = musicId;
 	sf::Music& previous{ m_musics[m_currentMusicVoice] };
-	m_currentMusicVoice = 1 - m_currentMusicVoice;
+	m_currentMusicVoice = 1u - m_currentMusicVoice;
 	sf::Music& current{ m_musics[m_currentMusicVoice] };
 
 	m_previousVolume = previous.getVolume();
@@ -220,7 +222,7 @@ void Control::stopAll()
 
 void Control::setMaximumNumberOfVoices(const unsigned int maximumNumberOfVoices)
 {
-	m_voices.resize(maximumNumberOfVoices);
+	m_voices.resize(maximumNumberOfVoices, sf::Sound(emptySoundBuffer));
 }
 
 
