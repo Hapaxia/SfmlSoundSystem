@@ -1,9 +1,9 @@
 # SfmlSoundSystem
 by Hapaxia
 
-Sound Control System for use with SFML
+Sound Control System for use with SFML 3
 
-Requires C++11 or later.
+Requires C++.
 
 For information, view the [Wiki].
 
